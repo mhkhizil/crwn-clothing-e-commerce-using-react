@@ -19,13 +19,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 //the way that google want
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({
+///fb authentication doe tachr auth twy htl chin yon nout provider twy htet lk 
+
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
     prompt: "select_account"
 });
 export const auth = getAuth();
 //giving google with auth and parameters it requires
-export const signInWithGooglePopUp = () => signInWithPopup(auth, provider)
+export const signInWithGooglePopUp = () => signInWithPopup(auth, googleProvider)
+//google popo up ma k pl  redirect ko use ml so yin thu ka google page ko yt p mha auth lk p mha ko page ko redirect lk py dl atwt page ka asa ka ny reload pyn lk ya dl ae atwt br data mhr shi dot mhr ma hk woo ae dr kyg ae dr ko tone ml so yin useEffect nk firebase ka getredirect metjod twel tone ya ml ui compo phat mhr
+// export const signInWithGoogleRedirect=()=> signInWithRedirect(auth,googleProvider)
 //using fire base to enable google pop up sign in 
 
 //storing the authenticated user
@@ -47,7 +51,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         } catch (error) {
             console.log("Error while creating the user!", error.message);
         }
-    }else{
+    } else {
         return userDocRef;
     }
 }
