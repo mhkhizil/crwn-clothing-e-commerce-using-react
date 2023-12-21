@@ -1,21 +1,23 @@
 import React, { useState } from "react";
+
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../util/firebase/firebase.utils";
-
-const defaultFormFields = {
-  displayName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-};
+import "./sign-up-form.style.scss"
+import InputCompo from "../form-input/formIput.component";
 const SignUpForm = () => {
+  const defaultFormFields = {
+    displayName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
-  const resetFormField=()=>{
+  const resetFormField = () => {
     setFormFields(defaultFormFields);
-  }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (password !== confirmPassword) {
@@ -43,35 +45,40 @@ const SignUpForm = () => {
   };
 
   return (
-    <div>
-      <h1>Sign up with your email and password</h1>
+    <div className="sign-up-container">
+      <h2>Dont have an account?</h2>
+      <span>Sign up with your email and password</span>
       <form action="" onSubmit={handleSubmit}>
-        <label htmlFor="">Display Name</label>
-        <input
+
+        <InputCompo
+          label={"Display name"}
           type="text"
           required
           name="displayName"
           value={displayName}
           onChange={handleChange}
         />
-        <label htmlFor="">Email</label>
-        <input
+
+        <InputCompo
+          label={"Email"}
           type="email"
           name="email"
           required
           value={email}
           onChange={handleChange}
         />
-        <label htmlFor="">Password</label>
-        <input
+
+        <InputCompo
+          label={"Password"}
           type="password"
           name="password"
           required
           value={password}
           onChange={handleChange}
         />
-        <label htmlFor="">Confirm Password</label>
-        <input
+
+        <InputCompo
+          label={"Confirm password"}
           type="password"
           required
           name="confirmPassword"
