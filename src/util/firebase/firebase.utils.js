@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 //for auth
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider ,createUserWithEmailAndPassword} from "firebase/auth"
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -36,7 +36,8 @@ export const signInWithGooglePopUp = () => signInWithPopup(auth, googleProvider)
 //
 //instantiate firestore db to store the authenticated users
 export const db = getFirestore();
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (userAuth,additionalInfo={}) => {
+    if (!userAuth) return;
     //this ask 3 arguments 1.db,2.collection,3.uniqueid this is for initializing the collection with unique id in a db
     const userDocRef = doc(db, 'users', userAuth.uid);
     console.log(userDocRef);
@@ -47,7 +48,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
         const { displayName, email } = userAuth;
         const createdAt = new Date();
         try {
-            setDoc(userDocRef, { displayName, email, createdAt });
+            setDoc(userDocRef, { displayName, email, createdAt,...additionalInfo });
         } catch (error) {
             console.log("Error while creating the user!", error.message);
         }
@@ -58,3 +59,9 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
 
 //storing the authenticated user
+export const  createAuthUserWithEmailAndPassword=async(email,password)=>{
+    if(!email || !password)return;
+    return await createUserWithEmailAndPassword(auth,email,password);
+
+  
+}
