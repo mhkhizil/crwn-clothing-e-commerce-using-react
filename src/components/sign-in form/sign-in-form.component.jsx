@@ -1,15 +1,19 @@
 import React, { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../contexts/user.contexts";
 
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
   signInWithGooglePopUp,
-signInAuthUserWithEmailAndPassword
+  signInAuthUserWithEmailAndPassword,
 } from "../../util/firebase/firebase.utils";
 import "./sign-in-form.style.scss";
 import InputCompo from "../form-input/formIput.component";
 import CustomButton from "../button/customButom.component";
+
 const SignInForm = () => {
+  const { setCurrentUser } = useContext(UserContext);
   const defaultFormFields = {
     email: "",
     password: "",
@@ -23,25 +27,28 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response=await signInAuthUserWithEmailAndPassword(email,password);
-      console.log(response);
+      const { user } = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+
       resetFormField();
+      setCurrentUser(user);
     } catch (e) {
       switch (e.code) {
         case "auth/wrong-password":
-          alert("Incorrect password")
+          alert("Incorrect password");
           break;
-          case "auth/user-not-found":
-            alert("Incorrect email")
-            break;
-      
+        case "auth/user-not-found":
+          alert("Incorrect email");
+          break;
+
         default:
           break;
       }
-      if (e.code==="auth/wrong-password") {
-        alert("Incorrect password")
-      }else if(e.code==="auth/user-not-found")
-      console.log(e);
+      if (e.code === "auth/wrong-password") {
+        alert("Incorrect password");
+      } else if (e.code === "auth/user-not-found") console.log(e);
     }
   };
   const handleChange = (event) => {
@@ -50,7 +57,6 @@ const SignInForm = () => {
   };
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopUp();
-    console.log(user);
     await createUserDocumentFromAuth(user);
   };
   return (
@@ -76,15 +82,15 @@ const SignInForm = () => {
           onChange={handleChange}
         />
 
-     <div className="buttons-container">
-     <CustomButton children={"SIGN IN "} />
-        <CustomButton
-        type="button"
-          onClick={signInWithGoogle}
-          btnType={"google-sign-in"}
-          children={"Google sign in"}
-        />
-     </div>
+        <div className="buttons-container">
+          <CustomButton children={"SIGN IN "} />
+          <CustomButton
+            type="button"
+            onClick={signInWithGoogle}
+            btnType={"google-sign-in"}
+            children={"Google sign in"}
+          />
+        </div>
       </form>
     </div>
   );

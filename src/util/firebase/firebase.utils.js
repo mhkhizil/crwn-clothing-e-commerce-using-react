@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 //for auth
-import { getAuth, signInWithRedirect, signInWithPopup,signInWithEmailAndPassword, GoogleAuthProvider ,createUserWithEmailAndPassword} from "firebase/auth"
+import { getAuth, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, signOut } from "firebase/auth"
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -36,7 +36,9 @@ export const signInWithGooglePopUp = () => signInWithPopup(auth, googleProvider)
 //
 //instantiate firestore db to store the authenticated users
 export const db = getFirestore();
-export const createUserDocumentFromAuth = async (userAuth,additionalInfo={}) => {
+
+//storing the authenticated user IN USER COLLECTION
+export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
     if (!userAuth) return;
     //this ask 3 arguments 1.db,2.collection,3.uniqueid this is for initializing the collection with unique id in a db
     const userDocRef = doc(db, 'users', userAuth.uid);
@@ -48,7 +50,7 @@ export const createUserDocumentFromAuth = async (userAuth,additionalInfo={}) => 
         const { displayName, email } = userAuth;
         const createdAt = new Date();
         try {
-            setDoc(userDocRef, { displayName, email, createdAt,...additionalInfo });
+            setDoc(userDocRef, { displayName, email, createdAt, ...additionalInfo });//additional info is for sign up page bcz the auth api with email adn password doe s not return display name after authenticated user so in order to store that value we have to store it in etra object bcz destructureed displayName value from userAuth will only have null value for sign up unlike sign in with google bcz google will reture displaynAME OF AUTENTICATED USER
         } catch (error) {
             console.log("Error while creating the user!", error.message);
         }
@@ -57,17 +59,18 @@ export const createUserDocumentFromAuth = async (userAuth,additionalInfo={}) => 
     }
 }
 
+//FOR AUTHENTICATION OF ENTERED EMAIL AND PASSWORD  FOR SIGN UP(REGISTER)
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) return;
+    return await createUserWithEmailAndPassword(auth, email, password);
 
-//storing the authenticated user
-export const  createAuthUserWithEmailAndPassword=async(email,password)=>{
-    if(!email || !password)return;
-    return await createUserWithEmailAndPassword(auth,email,password);
 
-  
 }
-export const  signInAuthUserWithEmailAndPassword=async(email,password)=>{
-    if(!email || !password)return;
-    return await signInWithEmailAndPassword(auth,email,password);
+//FOR AUTHENTICATION OF WHETHER THE USER IS REGISTERED SIGN IN 
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+    if (!email || !password) return;
+    return await signInWithEmailAndPassword(auth, email, password);
 
-  
-}
+
+};
+ export const signOutUser=async()=> await signOut;
