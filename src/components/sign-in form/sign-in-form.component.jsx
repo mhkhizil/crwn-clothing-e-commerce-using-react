@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useContext } from "react";
-import { UserContext } from "../contexts/user.contexts";
 
 import {
-  createAuthUserWithEmailAndPassword,
+ 
   createUserDocumentFromAuth,
   signInWithGooglePopUp,
   signInAuthUserWithEmailAndPassword,
@@ -11,13 +9,13 @@ import {
 import "./sign-in-form.style.scss";
 import InputCompo from "../form-input/formIput.component";
 import CustomButton from "../button/customButom.component";
-
+const defaultFormFields = {
+  email: "",
+  password: "",
+};
 const SignInForm = () => {
-  const { setCurrentUser } = useContext(UserContext);
-  const defaultFormFields = {
-    email: "",
-    password: "",
-  };
+
+
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
   const resetFormField = () => {
@@ -27,13 +25,13 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const { user } = await signInAuthUserWithEmailAndPassword(
+      await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
 
       resetFormField();
-      setCurrentUser(user);
+   
     } catch (e) {
       switch (e.code) {
         case "auth/wrong-password":
@@ -46,9 +44,7 @@ const SignInForm = () => {
         default:
           break;
       }
-      if (e.code === "auth/wrong-password") {
-        alert("Incorrect password");
-      } else if (e.code === "auth/user-not-found") console.log(e);
+
     }
   };
   const handleChange = (event) => {
@@ -56,8 +52,9 @@ const SignInForm = () => {
     setFormFields({ ...formFields, [name]: value });
   };
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopUp();
-    await createUserDocumentFromAuth(user);
+   await signInWithGooglePopUp();
+ 
+    
   };
   return (
     <div className="sign-up-container">

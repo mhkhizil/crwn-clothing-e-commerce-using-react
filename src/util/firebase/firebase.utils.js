@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 //for auth
-import { getAuth, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, signOut } from "firebase/auth"
+import { getAuth, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
 import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -54,9 +54,9 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) 
         } catch (error) {
             console.log("Error while creating the user!", error.message);
         }
-    } else {
+    } 
         return userDocRef;
-    }
+    
 }
 
 //FOR AUTHENTICATION OF ENTERED EMAIL AND PASSWORD  FOR SIGN UP(REGISTER)
@@ -73,4 +73,5 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
 
 };
- export const signOutUser=async()=> await signOut;
+export const signOutUser = async () => await signOut(auth);
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);

@@ -1,21 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../util/firebase/firebase.utils";
-import "./sign-up-form.style.scss"
+import "./sign-up-form.style.scss";
 import InputCompo from "../form-input/formIput.component";
 import CustomButton from "../button/customButom.component";
-import { UserContext } from "../contexts/user.contexts";
+
+const defaultFormFields = {
+  displayName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 const SignUpForm = () => {
-  const {setCurrentUser}=useContext(UserContext);
-  const defaultFormFields = {
-    displayName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
   const resetFormField = () => {
@@ -32,7 +31,7 @@ const SignUpForm = () => {
         email,
         password
       );
-      setCurrentUser(user);
+
       await createUserDocumentFromAuth(user, { displayName });
       resetFormField();
     } catch (e) {
@@ -53,7 +52,6 @@ const SignUpForm = () => {
       <h2>Dont have an account?</h2>
       <span>Sign up with your email and password</span>
       <form action="" onSubmit={handleSubmit}>
-
         <InputCompo
           label={"Display name"}
           type="text"
