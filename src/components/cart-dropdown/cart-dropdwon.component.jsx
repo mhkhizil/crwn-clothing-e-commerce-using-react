@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import "./cart-dropdown.style.scss"
 import CustomButton from '../button/customButom.component'
+
 const CartDropdown = () => {
+
   return (
-    <div className='cart-dropdown-container'>
+    <div className='cart-dropdown-container' >
         <div className='cart-items'>
 
         </div>

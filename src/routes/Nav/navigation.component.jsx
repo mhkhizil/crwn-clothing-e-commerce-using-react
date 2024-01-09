@@ -6,10 +6,12 @@ import { UserContext } from "../../components/contexts/user.contexts";
 import { signOutUser } from "../../util/firebase/firebase.utils";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdwon.component";
+import { CartContext } from "../../components/contexts/cart.context";
 const Navigation = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
-const [show,setShow]=useState(false);
-console.log(show);
+  const { isCartOpen} = useContext(CartContext);
+
+console.log(isCartOpen);
   return (
     <>
       <div className="navigation">
@@ -30,16 +32,16 @@ console.log(show);
             </Link>
           
           )}
-       <button onClick={()=>setShow(!show)}>
+      
        <CartIcon />
-       </button>
+ 
           
        
          
            
             
         </div>
-     {show && <CartDropdown/>}
+     {isCartOpen && <CartDropdown/>}
        
       </div>
       <Outlet />
