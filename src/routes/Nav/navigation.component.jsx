@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { ReactComponent as CrwnLogo } from "../../assests/crown.svg";
 import "../Nav/navigation.style.scss";
 import { UserContext } from "../../components/contexts/user.contexts";
 import { signOutUser } from "../../util/firebase/firebase.utils";
+import CartIcon from "../../components/cart-icon/cart-icon.component";
+import CartDropdown from "../../components/cart-dropdown/cart-dropdwon.component";
 const Navigation = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
-
-
+const [show,setShow]=useState(false);
+console.log(show);
   return (
     <>
       <div className="navigation">
@@ -26,8 +28,19 @@ const Navigation = () => {
             <Link className="nav-link" to={"/auth"}>
               SIGN IN
             </Link>
+          
           )}
+       <button onClick={()=>setShow(!show)}>
+       <CartIcon />
+       </button>
+          
+       
+         
+           
+            
         </div>
+     {show && <CartDropdown/>}
+       
       </div>
       <Outlet />
     </>
