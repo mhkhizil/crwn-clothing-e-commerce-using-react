@@ -1,17 +1,20 @@
-import React, { useContext } from 'react'
-import { CartContext } from '../contexts/cart.context'
-
-const CartItem = ({cartItem}) => {
-  
-    const {name,id,quantity,price}=cartItem;
-    console.log(name);
+import React, { useContext } from "react";
+import { CartContext } from "../contexts/cart.context";
+import "./cart-item.style.scss"
+const CartItem = ({ cartItem }) => {
+  const { name, quantity, price, imageUrl } = cartItem;
+  console.log(name);
   return (
-    <div key={id}>
-      <h2>{name}</h2>
-      <span>{quantity}</span>
-      <h2>{price}</h2>
+    <div className="cart-item-container">
+      <img src={imageUrl} alt={name} />
+      <div className="item-details">
+        <span className="name">{name}</span>
+        <span className="price">${price}x{quantity}=${price*quantity}</span>
+      </div>
+    
+    
     </div>
-  )
-}
+  );
+};
 
-export default CartItem
+export default CartItem;
