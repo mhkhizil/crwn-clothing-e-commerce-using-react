@@ -4,7 +4,7 @@ import {ReactComponent as ShoppingIcon} from "../../assests/shopping-bag.svg"
 import { CartContext } from '../contexts/cart.context';
 const CartIcon = () => {
   const {isCartOpen,setIsCartOpen}=useContext(CartContext);
-  console.log(isCartOpen);
+
 
   return (
     <div className='cart-icon-container' onClick={()=>setIsCartOpen(!isCartOpen)}>

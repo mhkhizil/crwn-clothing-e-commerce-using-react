@@ -11,7 +11,7 @@ const Navigation = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const { isCartOpen} = useContext(CartContext);
 
-console.log(isCartOpen);
+
   return (
     <>
       <div className="navigation">
