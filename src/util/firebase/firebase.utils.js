@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 //for auth
 import { getAuth, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, getDoc, setDoc, doc } from "firebase/firestore"
+import { getFirestore, getDoc, setDoc, doc, collection, writeBatch } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -27,14 +27,14 @@ googleProvider.setCustomParameters({
 });
 export const auth = getAuth();
 //giving google with auth and parameters it requires
-export const signInWithGooglePopUp = async() => {
+export const signInWithGooglePopUp = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+        await signInWithPopup(auth, googleProvider);
     } catch (error) {
-      // Handle the error here
-      console.error("Error during Google sign-in popup:", error.message);
+        // Handle the error here
+        console.error("Error during Google sign-in popup:", error.message);
     }
-  };
+};
 //google popo up ma k pl  redirect ko use ml so yin thu ka google page ko yt p mha auth lk p mha ko page ko redirect lk py dl atwt page ka asa ka ny reload pyn lk ya dl ae atwt br data mhr shi dot mhr ma hk woo ae dr kyg ae dr ko tone ml so yin useEffect nk firebase ka getredirect metjod twel tone ya ml ui compo phat mhr
 // export const signInWithGoogleRedirect=()=> signInWithRedirect(auth,googleProvider)
 //using fire base to enable google pop up sign in 
@@ -43,7 +43,18 @@ export const signInWithGooglePopUp = async() => {
 //
 //instantiate firestore db to store the authenticated users
 export const db = getFirestore();
-
+//storing the products in firebase 
+export const addCollectionsAndDocuments = async (collectionKey, objectToAdd) => {
+    //transaction method so dr process takhu lone ma p khin mhr error tt twr yin ae process takhu lone ko cancel lk cha dl concept ae conceppt nk object akone lone ko collection htl htl chin lo writeBAtch ko use 
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+    objectToAdd.forEach(object => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object)
+    });
+    await batch.commit();
+    console.log("done");
+}
 //storing the authenticated user IN USER COLLECTION
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
     if (!userAuth) return;
@@ -61,9 +72,9 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) 
         } catch (error) {
             console.log("Error while creating the user!", error.message);
         }
-    } 
-        return userDocRef;
-    
+    }
+    return userDocRef;
+
 }
 
 //FOR AUTHENTICATION OF ENTERED EMAIL AND PASSWORD  FOR SIGN UP(REGISTER)
