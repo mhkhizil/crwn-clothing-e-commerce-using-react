@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 //for auth
 import { getAuth, signInWithRedirect, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, getDoc, setDoc, doc, collection, writeBatch } from "firebase/firestore"
+import { getFirestore, getDoc, setDoc, doc, collection, writeBatch, query, getDocs } from "firebase/firestore"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -54,6 +54,19 @@ export const addCollectionsAndDocuments = async (collectionKey, objectToAdd) => 
     });
     await batch.commit();
     console.log("done");
+};
+//fetching the data from firestore db
+export const getCategoriesAndDocuments=async ()=>{
+const collectionRef=collection(db,"categories");
+const q=query(collectionRef);
+const querySnapShot=await getDocs(q);
+const categoriesMap=querySnapShot.docs.reduce((acc,docSnapShot)=>{
+    const {title,items} =docSnapShot.data();
+    //using hashtable
+    acc[title.toLowerCase()]=items;
+    return acc;
+},{});
+return categoriesMap;
 }
 //storing the authenticated user IN USER COLLECTION
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {
